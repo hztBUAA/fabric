@@ -61,6 +61,8 @@ func (e *Egress) Nodes() []uint64 {
 // SendConsensus sends the BFT message to the cluster
 func (e *Egress) SendConsensus(targetID uint64, m *protos.Message) {
 	//增加变异逻辑  for consensus
+	m = MutateSmartBFTMsg(m)
+
 	err := e.RPC.SendConsensus(targetID, bftMsgToClusterMsg(m, e.Channel))
 	if err != nil {
 		e.Logger.Warnf("Failed sending to %d: %v", targetID, err)
@@ -85,6 +87,9 @@ func (e *Egress) SendTransaction(targetID uint64, request []byte) {
 	}
 	//增加修改逻辑 mutate for transaction
 
+	// msg = MutateSmartBFTMsg(msg)
+
+	
 	e.RPC.SendSubmit(targetID, msg, report)
 }
 
